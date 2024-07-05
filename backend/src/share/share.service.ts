@@ -150,13 +150,15 @@ export class ShareService {
 
     // Send email for each recipient
     for (const recipient of share.recipients) {
-      await this.emailService.sendMailToShareRecipients(
-        recipient.email,
-        share.id,
-        share.creator,
-        share.description,
-        share.expiration,
-      );
+      
+      if (share.creator.username === "Vorstufe_Evers") {
+          // User Vorstufe eigene Mails
+          await this.emailService.sendMailToShareRecipients(recipient.email, share.id, share.creator, share.files[0].name, share.expiration);
+      } else {
+          // Alle anderen Accounts verwenden die Mail vom ReverseShare
+          await this.emailService.sendMailToReverseShareCreator(recipient.email, share.id, share.creator, share.files[0].name, share.expiration);
+      }
+      
     }
 
     if (
